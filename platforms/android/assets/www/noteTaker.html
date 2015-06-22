@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+	<title>noteTaker</title>
+	<script type="text/javascript">
+	function onSub() {
+		alert("Hey");
+	}
+	
+	function cat1()	{
+		alert("Cat1");
+	}
+
+	function cat2()	{
+		alert("Cat2");
+	}
+
+	function cat3()	{
+		alert("Cat3");
+	}
+	</script>
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>                        
+			</button>
+			<a class="navbar-brand" href="#">Note Taker App</a>
+		</div>
+		<div class="collapse navbar-collapse" id="myNavbar">
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="index.html">New Note</a></li>
+				<li onClick="cat1()"><a href="">Category 1</a></li>
+				<li onClick="cat2()"><a href="">Category 2</a></li>
+				<li onClick="cat3()"><a href="">Category 3</a></li>
+			</ul>
+		</div>
+	</nav>
+	<div class="container-fluid" style="margin-top:75px">
+		<form onSubmit="onSub()">
+			<div class="row">
+				<div class="col-xs-12">
+					<label for="notetitle">Title</label>
+					<input type="text" class="form-control" id="notetitle" placeholder="Note title"/>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<label for="notebox">Note:</label>
+					<textarea id="notebox" class="form-control" rows="4" placeholder="Notes"></textarea>
+				</div>
+			</div>
+			<br/>
+			<div class="row">
+				<div class="col-xs-6">
+					<select class="form-control">
+						<option>Cat 1</option>
+						<option>Cat 2</option>
+						<option>Cat 3</option>
+					</select>
+				</div>
+				<div class="col-xs-1 col-xs-offset-1">
+					<button type="submit" class="btn btn-default">Save</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</body>
+</html>
