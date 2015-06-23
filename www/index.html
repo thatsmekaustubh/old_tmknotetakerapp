@@ -7,80 +7,99 @@
 	<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
 	<title>noteTaker</title>
 	<script type="text/javascript">
-	function formOpr(){
-		var divControl=document.getElementById("formDiv");
-		divControl.style.display="inline";
-		var divControl=document.getElementById("cat1Div");
-		divControl.style.display="none";
-		var divControl=document.getElementById("cat2Div");
-		divControl.style.display="none";
-		var divControl=document.getElementById("cat3Div");
-		divControl.style.display="none";
-		return false;
-	}
-	$("").click(	function()	{
-					
-	});
-	function onSub() {
-		var noteTitle, noteBox, noteCategory;
-		noteTitle= document.getElementById("noteTitle");
-		noteBox= document.getElementById("noteBox");
-		noteCategory= document.getElementById("noteCategory");
-		//alert(noteTitle.value +";"+noteBox.value+";"+noteCategory.value);
-		
-		categoryObj=document.getElementById("cat"+noteCategory.value+"Div");
-			var divTag = document.createElement("div");
-				var h3Tag  = document.createElement("h3");
-				var t = document.createTextNode(noteTitle.value);
-				h3Tag.appendChild(t);
-				divTag.appendChild(h3Tag);
-			
-				var preTag = document.createElement("pre");
-				var t = document.createTextNode(noteBox.value);
-				preTag.appendChild(t);
-				divTag.appendChild(preTag);
-		categoryObj.appendChild(divTag);
-		noteTitle.value="";
-		noteBox.value="";
-		document.getElementsById("myNavbar").setAttribute("aria-expanded", "false");
-		return false;
-	}
-	
-	function cat1()	{
-		var divControl=document.getElementById("formDiv");
-		divControl.style.display="none";
-		var divControl=document.getElementById("cat1Div");
-		divControl.style.display="inline";
-		var divControl=document.getElementById("cat2Div");
-		divControl.style.display="none";
-		var divControl=document.getElementById("cat3Div");
-		divControl.style.display="none";
-		return false;
-	}
+	$(document).ready(function(){		$("#noteEditor").submit(function(){
+										//collecting values
+										var noteTitle, noteText, categoryId,divName;
+										noteTitle 	=$("#noteTitle").val();
+										noteText	=$("#noteBox").val();
+										categoryId	=$("#noteCategory").val();
+										// To check : alert(noteTitle+"|"+noteText+"|"+categoryId);
+										
+										//POPULATE LOGIC: START
+										if(!noteTitle==""&&!noteText==""){
+											//POPULATE DIV
+											//constructing selector
+											divName="#cat"+categoryId+"Div";
+											// To check : alert(divName);
+											//Creating view node in respective category
+											$("<div/>", {	html: [$("<h3/>",{text:noteTitle}),$("<pre/>",{text:noteText})],
+														}).appendTo(divName);
+											
 
-	function cat2()	{
-		var divControl=document.getElementById("formDiv");
-		divControl.style.display="none";
-		var divControl=document.getElementById("cat1Div");
-		divControl.style.display="none";
-		var divControl=document.getElementById("cat2Div");
-		divControl.style.display="inline";
-		var divControl=document.getElementById("cat3Div");
-		divControl.style.display="none";
-		return false;
-	}
+											//POPULATE DB
 
-	function cat3()	{
-		var divControl=document.getElementById("formDiv");
-		divControl.style.display="none";
-		var divControl=document.getElementById("cat1Div");
-		divControl.style.display="none";
-		var divControl=document.getElementById("cat2Div");
-		divControl.style.display="none";
-		var divControl=document.getElementById("cat3Div");
-		divControl.style.display="inline";
-		return false;
-	}
+
+											//Clearing out the form
+											$("#noteTitle").val("");
+											$("#noteBox").val("");
+											$("#noteCategory").val();
+										} else {
+											alert("Please dont leave blank fields");
+										}
+										//POPULATE LOGIC: END
+
+
+										//staying on same page
+										return false;
+									});
+
+									/*	Here is the navigation logic
+										Alongside is the toggling of active node and display attribute
+										NAVIGATION LOGIC: BEGINS
+									*/
+									$("#newNote").click(function(event) {
+										$(this).addClass('active');
+										$("#myNavbar").addClass('collapse');
+										$("#myNavbar").removeClass('in');
+										$("#category1").removeClass('active');
+										$("#category2").removeClass('active');
+										$("#category3").removeClass('active');
+										$("#formDiv").css({display: "inline"});
+										$("#cat1Div").css({display: "none"});
+										$("#cat2Div").css({display: "none"});
+										$("#cat3Div").css({display: "none"});
+									});
+									$("#category1").click(function(event) {
+										$(this).addClass('active');
+										$("#myNavbar").addClass('collapse');
+										$("#myNavbar").removeClass('in');
+										$("#newNote").removeClass('active');
+										$("#category2").removeClass('active');
+										$("#category3").removeClass('active');
+										$("#formDiv").css({display: "none"});
+										$("#cat1Div").css({display: "inline"});
+										$("#cat2Div").css({display: "none"});
+										$("#cat3Div").css({display: "none"});
+									});
+									$("#category2").click(function(event) {
+										$(this).addClass('active');
+										$("#myNavbar").addClass('collapse');
+										$("#myNavbar").removeClass('in');
+										$("#newNote").removeClass('active');
+										$("#category1").removeClass('active');
+										$("#category3").removeClass('active');
+										$("#formDiv").css({display: "none"});
+										$("#cat1Div").css({display: "none"});
+										$("#cat2Div").css({display: "inline"});
+										$("#cat3Div").css({display: "none"});
+									});
+									$("#category3").click(function(event) {
+										$(this).addClass('active');
+										$("#myNavbar").addClass('collapse');
+										$("#myNavbar").removeClass('in');
+										$("#newNote").removeClass('active');
+										$("#category1").removeClass('active');
+										$("#category2").removeClass('active');
+										$("#formDiv").css({display: "none"});
+										$("#cat1Div").css({display: "none"});
+										$("#cat2Div").css({display: "none"});
+										$("#cat3Div").css({display: "inline"});
+									});
+									//	NAVIGATION LOGIC: ENDS
+
+								});
+
+
 	</script>
 </head>
 <body>
@@ -95,49 +114,44 @@
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav">
-				<li class="active" onClick="formOpr()"><a href="#">New Note</a></li>
-				<li onClick="cat1()"><a href="#">Category 1</a></li>
-				<li onClick="cat2()"><a href="#">Category 2</a></li>
-				<li onClick="cat3()"><a href="#">Category 3</a></li>
+				<li id="newNote" class="active"><a href="#">New Note</a></li>
+				<li id="category1"><a href="#">Category 1</a></li>
+				<li id="category2"><a href="#">Category 2</a></li>
+				<li id="category3"><a href="#">Category 3</a></li>
 			</ul>
 		</div>
 	</nav>
 	<div style="margin-top:65px">
 		<div id="formDiv">
-			<!-- <form> -->
-			<form onSubmit="return onSub()">
+			<form id="noteEditor">
+			<!-- <form onSubmit="return onSub()"> -->
 				<div class="row">
 					<div class="col-xs-12">
-						<label for="notetitle">Title</label>
-						<input type="text" class="form-control" id="noteTitle" placeholder="Note title"/>
+						<label for="noteTitle">Title</label>
+						<input id="noteTitle" type="text" class="form-control" placeholder="Note title"/>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-xs-12">
-						<label for="notebox">Note:</label>
+						<label for="noteBox">Note:</label>
 						<textarea id="noteBox" class="form-control" rows="4" placeholder="Notes"></textarea>
 					</div>
 				</div>
 				<br/>
 				<div class="row">
-					<div class="col-xs-7">
-						<select class="form-control" id="noteCategory">
+					<div class="col-xs-9">
+						<select  id="noteCategory" class="form-control">
 							<option value="1">Category 1</option>
 							<option value="2">Category 2</option>
 							<option value="3">Category 3</option>
 						</select>
 					</div>
-					<div class="col-xs-1">
-						<button type="submit" class="btn btn-default">Save</button> 
+					<div class="col-xs-3">
+						<button type="submit" class="btn btn-block btn-default">Save</button> 
 						<!-- <button onClick="onSub()" class="btn btn-default">Save</button>-->
 					</div>
 				</div>
 			</form>
-		</div>
-		<div id="infoDiv" class="container-fluid" style="display:inline;">
-			<p class="text-muted">
-			The above form could be used to insert new notes in app, by default in any on the three category. So that we can have a good UI I am putting this note here it will give a scrolling margin to the app while giving notes as input.
-			</p>
 		</div>
 		<div id="cat1Div" style="display:none;">
 			
