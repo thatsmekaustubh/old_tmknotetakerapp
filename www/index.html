@@ -4,105 +4,23 @@
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+	<script type="text/javascript" charset="utf-8">
+    // Wait for device API libraries to load
+    //
+    function onLoad() {
+        document.addEventListener("deviceready", onDeviceReady, false);
+    }
+    function onDeviceReady() {
+
+    }
+    </script>
+   	<script src="js/logic.js"></script>
 	<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
 	<title>noteTaker</title>
-	<script type="text/javascript">
-	$(document).ready(function(){		$("#noteEditor").submit(function(){
-										//collecting values
-										var noteTitle, noteText, categoryId,divName;
-										noteTitle 	=$("#noteTitle").val();
-										noteText	=$("#noteBox").val();
-										categoryId	=$("#noteCategory").val();
-										// To check : alert(noteTitle+"|"+noteText+"|"+categoryId);
-										
-										//POPULATE LOGIC: START
-										if(!noteTitle==""&&!noteText==""){
-											//POPULATE DIV
-											//constructing selector
-											divName="#cat"+categoryId+"Div";
-											// To check : alert(divName);
-											//Creating view node in respective category
-											$("<div/>", {	html: [$("<h3/>",{text:noteTitle}),$("<pre/>",{text:noteText})],
-														}).appendTo(divName);
-											
-
-											//POPULATE DB
-
-
-											//Clearing out the form
-											$("#noteTitle").val("");
-											$("#noteBox").val("");
-											$("#noteCategory").val();
-										} else {
-											alert("Please dont leave blank fields");
-										}
-										//POPULATE LOGIC: END
-
-
-										//staying on same page
-										return false;
-									});
-
-									/*	Here is the navigation logic
-										Alongside is the toggling of active node and display attribute
-										NAVIGATION LOGIC: BEGINS
-									*/
-									$("#newNote").click(function(event) {
-										$(this).addClass('active');
-										$("#myNavbar").addClass('collapse');
-										$("#myNavbar").removeClass('in');
-										$("#category1").removeClass('active');
-										$("#category2").removeClass('active');
-										$("#category3").removeClass('active');
-										$("#formDiv").css({display: "inline"});
-										$("#cat1Div").css({display: "none"});
-										$("#cat2Div").css({display: "none"});
-										$("#cat3Div").css({display: "none"});
-									});
-									$("#category1").click(function(event) {
-										$(this).addClass('active');
-										$("#myNavbar").addClass('collapse');
-										$("#myNavbar").removeClass('in');
-										$("#newNote").removeClass('active');
-										$("#category2").removeClass('active');
-										$("#category3").removeClass('active');
-										$("#formDiv").css({display: "none"});
-										$("#cat1Div").css({display: "inline"});
-										$("#cat2Div").css({display: "none"});
-										$("#cat3Div").css({display: "none"});
-									});
-									$("#category2").click(function(event) {
-										$(this).addClass('active');
-										$("#myNavbar").addClass('collapse');
-										$("#myNavbar").removeClass('in');
-										$("#newNote").removeClass('active');
-										$("#category1").removeClass('active');
-										$("#category3").removeClass('active');
-										$("#formDiv").css({display: "none"});
-										$("#cat1Div").css({display: "none"});
-										$("#cat2Div").css({display: "inline"});
-										$("#cat3Div").css({display: "none"});
-									});
-									$("#category3").click(function(event) {
-										$(this).addClass('active');
-										$("#myNavbar").addClass('collapse');
-										$("#myNavbar").removeClass('in');
-										$("#newNote").removeClass('active');
-										$("#category1").removeClass('active');
-										$("#category2").removeClass('active');
-										$("#formDiv").css({display: "none"});
-										$("#cat1Div").css({display: "none"});
-										$("#cat2Div").css({display: "none"});
-										$("#cat3Div").css({display: "inline"});
-									});
-									//	NAVIGATION LOGIC: ENDS
-
-								});
-
-
-	</script>
 </head>
 <body>
+	<!-- NAVIGATIONNNNN : START-->
 	<nav class="navbar navbar-inverse navbar-fixed-top">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -115,16 +33,23 @@
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav">
 				<li id="newNote" class="active"><a href="#">New Note</a></li>
-				<li id="category1"><a href="#">Category 1</a></li>
-				<li id="category2"><a href="#">Category 2</a></li>
-				<li id="category3"><a href="#">Category 3</a></li>
+				<li id="category1"><a href="#">Personal</a></li>
+				<li id="category2"><a href="#">Office</a></li>
+				<li id="category3"><a href="#">Others</a></li>
 			</ul>
 		</div>
 	</nav>
+	<!-- NAVIGATIONNNNN : END-->
+
+
 	<div style="margin-top:65px">
 		<div id="formDiv">
 			<form id="noteEditor">
 			<!-- <form onSubmit="return onSub()"> -->
+				<!-- Token : set 1 for update set 0 for insert -->
+				<input id="token" type="hidden" value="0"/>
+				<input id="rowid" type="hidden" value="0"/>
+
 				<div class="row">
 					<div class="col-xs-12">
 						<label for="noteTitle">Title</label>
@@ -138,29 +63,26 @@
 					</div>
 				</div>
 				<br/>
-				<div class="row">
-					<div class="col-xs-9">
+				<div id="categoryList" class="row">
+					<div id="selList" class="col-xs-9">
 						<select  id="noteCategory" class="form-control">
-							<option value="1">Category 1</option>
-							<option value="2">Category 2</option>
-							<option value="3">Category 3</option>
+							<option value="1">Personal</option>
+							<option value="2">Office</option>
+							<option value="3">Others</option>
 						</select>
 					</div>
 					<div class="col-xs-3">
-						<button type="submit" class="btn btn-block btn-default">Save</button> 
+						<button id="saveit" type="submit" class="btn btn-block btn-default">Save</button> 
 						<!-- <button onClick="onSub()" class="btn btn-default">Save</button>-->
 					</div>
 				</div>
 			</form>
 		</div>
-		<div id="cat1Div" style="display:none;">
-			
-		</div>
-		<div id="cat2Div" style="display:none;">
-			
-		</div>
-		<div id="cat3Div" style="display:none;">
-			
+		<div id="cat1Div" style="display:none;">		</div>
+		<div id="cat2Div" style="display:none;">		</div>
+		<div id="cat3Div" style="display:none;">		</div>
+		<div id="newCatDiv" style="display:none;">
+
 		</div>
 	</div>
 </body>
