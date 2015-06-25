@@ -7,8 +7,8 @@ $(document).ready(function(){
 	var token, rowid, noteTitle, noteText, categoryId,divName;
 	token		=$("#token").val();
 	rowid		=$("#rowid").val();
-	noteTitle 	=$("#noteTitle").val();
-	noteText	=$("#noteBox").val();
+	noteTitle 	=escape($("#noteTitle").val());
+	noteText	=escape($("#noteBox").val());
 	categoryId	=$("#noteCategory").val();
 	// To check : alert(noteTitle+"|"+noteText+"|"+categoryId);
 	if(!noteTitle==""&&!noteText==""){
@@ -62,6 +62,12 @@ $(document).ready(function(){
 		$("#cat3Div").css({display: "none"});
 		$("#token").val("0");
 		$("#rowid").val("0");
+		$("#noteTitle").val("");
+		$("#noteBox").val("");
+		$("#noteCategory").val("1");
+		$("#deleteIt").remove();
+   		$("#selList").removeClass('col-xs-6');
+		$("#selList").addClass('col-xs-9');
 	});
 
 	//Personal page
@@ -72,7 +78,7 @@ $(document).ready(function(){
 		   tx.executeSql('SELECT id,* FROM notes where category="1"', [], function (tx, results) {
 		      var len = results.rows.length, i;			
 		      for (i = 0; i < len; i++){   
-		         $("<div/>", {html: [$("<h3/>",{class: 'heads',id: results.rows.item(i).id ,text: results.rows.item(i).notetitle }),$("<pre/>",{ text:results.rows.item(i).notecontent})]}).appendTo(divName);
+		         $("<div/>", {html: [$("<h3/>",{class: 'heads',id: results.rows.item(i).id ,html: unescape(results.rows.item(i).notetitle) }),$("<pre/>",{ html: unescape(results.rows.item(i).notecontent) })]}).appendTo(divName);
 		      }
 			
 		   }, null);
@@ -97,7 +103,7 @@ $(document).ready(function(){
 		   tx.executeSql('SELECT id,* FROM notes where category="2"', [], function (tx, results) {
 		      var len = results.rows.length, i;			
 		      for (i = 0; i < len; i++){   
-		         $("<div/>", {html: [$("<h3/>",{class: 'heads',id: results.rows.item(i).id ,text: results.rows.item(i).notetitle }),$("<pre/>",{text:results.rows.item(i).notecontent})]}).appendTo(divName);
+		         $("<div/>", {html: [$("<h3/>",{class: 'heads',id: results.rows.item(i).id ,html: unescape(results.rows.item(i).notetitle) }),$("<pre/>",{ html: unescape(results.rows.item(i).notecontent) })]}).appendTo(divName);
 		      }
 			
 		   }, null);
@@ -122,7 +128,7 @@ $(document).ready(function(){
 		   tx.executeSql('SELECT id,* FROM notes where category="3"', [], function (tx, results) {
 		      var len = results.rows.length, i;			
 		      for (i = 0; i < len; i++){   
-		         $("<div/>", {html: [$("<h3/>",{class: 'heads',id: results.rows.item(i).id ,text: results.rows.item(i).notetitle }),$("<pre/>",{text:results.rows.item(i).notecontent})]}).appendTo(divName);
+		         $("<div/>", {html: [$("<h3/>",{class: 'heads',id: results.rows.item(i).id ,html: unescape(results.rows.item(i).notetitle) }),$("<pre/>",{ html: unescape(results.rows.item(i).notecontent) })]}).appendTo(divName);
 		      }
 			
 		   }, null);
