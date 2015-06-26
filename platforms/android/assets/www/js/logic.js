@@ -93,6 +93,15 @@ $(document).ready(function(){
 		$("#cat1Div").css({display: "inline"});
 		$("#cat2Div").css({display: "none"});
 		$("#cat3Div").css({display: "none"});
+
+		$("#token").val("0");
+		$("#rowid").val("0");
+		$("#noteTitle").val("");
+		$("#noteBox").val("");
+		$("#noteCategory").val("1");
+		$("#deleteIt").remove();
+   		$("#selList").removeClass('col-xs-6');
+		$("#selList").addClass('col-xs-9');
 	});
 
 	//Office page
@@ -118,6 +127,15 @@ $(document).ready(function(){
 		$("#cat1Div").css({display: "none"});
 		$("#cat2Div").css({display: "inline"});
 		$("#cat3Div").css({display: "none"});
+
+		$("#token").val("0");
+		$("#rowid").val("0");
+		$("#noteTitle").val("");
+		$("#noteBox").val("");
+		$("#noteCategory").val("1");
+		$("#deleteIt").remove();
+   		$("#selList").removeClass('col-xs-6');
+		$("#selList").addClass('col-xs-9');
 	});
 
 	//Others page
@@ -143,6 +161,15 @@ $(document).ready(function(){
 		$("#cat1Div").css({display: "none"});
 		$("#cat2Div").css({display: "none"});
 		$("#cat3Div").css({display: "inline"});
+
+		$("#token").val("0");
+		$("#rowid").val("0");
+		$("#noteTitle").val("");
+		$("#noteBox").val("");
+		$("#noteCategory").val("1");
+		$("#deleteIt").remove();
+   		$("#selList").removeClass('col-xs-6');
+		$("#selList").addClass('col-xs-9');
 	});
 	//	NAVIGATION LOGIC: ENDS
 
@@ -170,14 +197,14 @@ $(document).ready(function(){
 
 
 	// TODO: Reduce this three functions to 1
-	$('#cat1Div').on( 'click', '.heads', function () {
+	$('#cat1Div,#cat2Div,#cat3Div').on( 'click', '.heads', function () {
 		var id=parseInt(this.id);
 		if(id>0 && id<999999){
 			//CHECK : alert(id);
 			db.transaction(function (tx) {
 			//CHECK : alert('SELECT rowid,* FROM notes where rowid='+id+'');
 			tx.executeSql('SELECT id,* FROM notes where id='+id+'', [], function (tx, results) {
-				var len = results.rows.length, i;
+				var len = results.rows.length, i, divname;
 				for (i = 0; i < len; i++){   
 					//Send back to form
 					$("#noteTitle").val(results.rows.item(i).notetitle);
@@ -191,9 +218,11 @@ $(document).ready(function(){
 					$("<div/>", {  id : "deleteIt", class : "col-xs-3", html: $("<button/>", {id: "killit", class: "btn btn-block btn-danger", text: "Delete"}) }).appendTo("#categoryList");
 
 					$("#newNote").addClass('active');
-					$("#category1").removeClass('active');
+					divname="#category"+results.rows.item(i).category;
+					$(divname).removeClass('active');
 					$("#formDiv").css({display: "inline"});
-					$("#cat1Div").css({display: "none"});
+					divname="#cat"+results.rows.item(i).category+"Div";
+					$(divname).css({display: "none"});
 
 					break;
 				}
@@ -201,7 +230,7 @@ $(document).ready(function(){
 			});
 		}
 	});
-
+/*
 	$('#cat2Div').on( 'click', '.heads', function () {
 		var id=parseInt(this.id);
 		if(id>0 && id<999999){
@@ -264,5 +293,5 @@ $(document).ready(function(){
 				}, null);
 			});
 		}
-	});
+	}); */
 });

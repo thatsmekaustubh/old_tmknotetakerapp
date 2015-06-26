@@ -196,7 +196,6 @@ $(document).ready(function(){
 
 
 
-	// TODO: Reduce this three functions to 1
 	$('#cat1Div,#cat2Div,#cat3Div').on( 'click', '.heads', function () {
 		var id=parseInt(this.id);
 		if(id>0 && id<999999){
@@ -230,68 +229,76 @@ $(document).ready(function(){
 			});
 		}
 	});
-/*
-	$('#cat2Div').on( 'click', '.heads', function () {
-		var id=parseInt(this.id);
-		if(id>0 && id<999999){
-			//CHECK : alert(id);
-			db.transaction(function (tx) {
-			//CHECK : alert('SELECT rowid,* FROM notes where rowid='+id+'');
-			tx.executeSql('SELECT id,* FROM notes where id='+id+'', [], function (tx, results) {
-				var len = results.rows.length, i;
-				for (i = 0; i < len; i++){   
-					//Send back to form
-					$("#noteTitle").val(results.rows.item(i).notetitle);
-					$("#noteBox").val(results.rows.item(i).notecontent);
-					$("#noteCategory").val(results.rows.item(i).category);
-					$("#token").val("1");
-					$("#rowid").val(id);
 
-					$("#selList").removeClass('col-xs-9');
-					$("#selList").addClass('col-xs-6');
-					$("<div/>", {  id : "deleteIt", class : "col-xs-3", html: $("<button/>", {id: "killit", class: "btn btn-block btn-danger", text: "Delete"}) }).appendTo("#categoryList");
+	var jsonCreator  = function(dbName, version, alias, size, tableName, primaryCol, colList, colLen) {
+		jsonObj 	= [];
+		item 		= {};
+		var db = openDatabase(dbName, version, alias, size);
+		db.transaction(function (tx) {
+			tx.executeSql('SELECT '+primaryCol+',* FROM '+tableName, [], function (tx, results) {
+				var len = results.rows.length, i, j;
+				for (i = 0; i < len; i++){
+					item= {};
+					j=0;
+					function display(msg) {
+						item[colList[j]] = String(msg);
+						j=j+1;
+					}
 
-					$("#newNote").addClass('active');
-					$("#category2").removeClass('active');
-					$("#formDiv").css({display: "inline"});
-					$("#cat2Div").css({display: "none"});
-					
-					break;
+					function walker(key, value) {
+					  // ...do what you like with `key` and `value`
+					  display(value)
+
+					  if (typeof value === "object") {
+					      // Recurse into children
+					      $.each(value, walker);
+					  }
+
+					}
+					$.each(results.rows[i], walker);
+					jsonObj.push(item);
 				}
-				}, null);
-			});
-		}
+				console.log(JSON.stringify(jsonObj));
+
+		        $.ajax({
+		        url: 'http://172.20.200.71/project/php/sync.php',		//Send URL
+		        type: 'POST',
+		        //contentType: 'application/json',
+		        data: { data : JSON.stringify(jsonObj)},//jsonObj,
+		        success: function (data) {
+		                    alert('success');
+		                }
+		        });
+
+
+			}, null);
+			//console.log(jsonObj);
+		});
+		//console.log(jsonObj);
+		return jsonObj;
+	}
+
+	$("#sendServer").click(function(event) {
+		//alert("ready to launch");
+		jsonLocalObj = [];
+		var colList = ["id", "notetitle", "notecontent","category"];
+		//jsonLocalObj = jsonCreator('notesDb1', '1.0', 'NOTES DB', 2 * 1024 * 1024, 'notes', 'id' ,colList,4); //shall return a json object
+		jsonCreator('notesDb1', '1.0', 'NOTES DB', 2 * 1024 * 1024, 'notes', 'id' ,colList,4);
+		//alert('did it worked?');
 	});
 
-	$('#cat3Div').on('click','.heads',function(event) {
-		var id=parseInt(this.id);
-		if(id>0 && id<999999){
-			//CHECK : alert(id);
-			db.transaction(function (tx) {
-			//CHECK : alert('SELECT rowid,* FROM notes where rowid='+id+'');
-			tx.executeSql('SELECT id,* FROM notes where id='+id+'', [], function (tx, results) {
-				var len = results.rows.length, i;
-				for (i = 0; i < len; i++){   
-					//Send back to form
-					$("#noteTitle").val(results.rows.item(i).notetitle);
-					$("#noteBox").val(results.rows.item(i).notecontent);
-					$("#noteCategory").val(results.rows.item(i).category);
-					$("#token").val("1");
-					$("#rowid").val(id);
+	$("#getServer").click(function(event) {
+		$.ajax({
+	        url: 'php/sync.php',		//Send URL
+	        type: 'POST',
+	        //contentType: 'application/json',
+	        data: { token : "fetchNotes" },//jsonObj,
+	        success: function (data) {
+	 	               alert('success');
+	        }
+		 });
+	});
+	
 
-					$("#selList").removeClass('col-xs-9');
-					$("#selList").addClass('col-xs-6');
-					$("<div/>", {  id : "deleteIt", class : "col-xs-3", html: $("<button/>", {id: "killit", class: "btn btn-block btn-danger", text: "Delete"}) }).appendTo("#categoryList");
 
-					$("#newNote").addClass('active');
-					$("#category3").removeClass('active');
-					$("#formDiv").css({display: "inline"});
-					$("#cat3Div").css({display: "none"});
-					
-					break;
-				}
-				}, null);
-			});
-		}
-	}); */
 });
